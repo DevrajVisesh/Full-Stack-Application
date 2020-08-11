@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            console.log("Page is Ready!");
+            var get_todos = function () {
+
+                $('#todos').html("");
+
+                $.get("http://127.0.0.1:1308/get_todos", function (data) {
+                    var data_json = JSON.parse(data);
+                    var i;
+                    for (i = 0; i < data_json.length; i++) {
+
+                        $('#todos').append("<br><div style='text-align:center; width:95%; background:black; color:white; font-size:35px;font-family: Roboto;'>" + data_json[i]+ "<span style='font-size:10px;'><button class='del_btn w3-bar-item w3-btn w3-black' id='"+data_json[i][0]+"' style='width:35px;height:35px;color:black'  >&#10060;</button></span></div>");
+
+                    }
+                
+                });
+
+            };
+
+            get_todos();
+
+            $('#todos').on('click','.del_btn', function(event){
+             var id = $(this).attr('id');
+             delete_selected_todo(id);
+            });
+             
+            $('#add_todos').click(function(){
+                var user_todo = prompt("Add your todo here:");
+                $.get("http://127.0.0.1:1308/db_insert/"+ user_todo,function(data){
+                    get_todos();
+                });
+            });
+
+            $('#delete_todos').click(function(){
+                var user_todo = prompt("Enter Row ID:");
+                $.get("http://127.0.0.1:1308/deletetodos/"+ user_todo,function(data){
+                    get_todos();
+                });
+            });
+
+
+            var delete_selected_todo = function(id){
+                //var user_todo = prompt("Please select a rowid to delete a todo ");
+                $.get("http://127.0.0.1:1308/deletetodos/" + id, function (data) {
+
+                     get_todos();
+                    //alert("todo deleted");
+
+                });
+                
+            };
+
+            $('#update_todos').click(function(){
+
+                var user_todo = prompt("Enter new value:");
+                var user_todo1 = prompt("Select a rowID to update the element:");
+                $.get("http://127.0.0.1:1308/updatetodos/"+user_todo +'/'+ user_todo1,function(data){
+                    get_todos();
+                });
+            });
+            $('#reload').click(function(){
+                location.reload(); 
+            });
+        });
+            
+      
+
+    </script>
+
+    <head>
+        <style>
+    
+            .button {border-radius: 50%;}
+        </style>
+    </head>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <body style = "padding:40px">
+
+        <div id="header" style = "text-align:center;color:whitesmoke ;background:black;width: 95% ;font-size: 35px;font-family:cursive">
+            My TO DO's
+        </div> 
+        <br>
+        <div id = "todos">
+
+        </div>
+        <br>
+
+        <button id="add_todos" class="w3-bar-item w3-btn w3-black" style="width:19.3%">Add Todo</button>
+        <button id="get_todos" class="w3-bar-item w3-btn w3-black" style="width:19.3%">Get Todo</button>
+        <button id="update_todos" class="w3-bar-item w3-btn w3-black" style="width:19.3%">Update Todo</button>
+        <button id="delete_todos" class="w3-bar-item w3-btn w3-black" style="width:19.3%">DeleteTodo</button>
+        <button id ="reload" onclick = "locationreload()" class="w3-btn w3-black w3-square w3-&#128260;&#128260;"style="width:5%"> &#128260;</button>
+        <a href="file:///C:/Users/Elitebook/OneDrive/Documents/GitHub/New/TODO_FRONTPAGE.html">
+
+            <button class="w3-bar-item w3-btn w3-black" style="width:10.3%;">EXIT</button>
+        </a>
+
+        
+        
+        <style> body{background-image: url('https://wallup.net/wp-content/uploads/2016/01/311969-abstract.jpg');}</style>
+
+        
+        
+        
+         
+    
+    </body>
+</html>
+
+         

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        console.log("Page is Ready!");
+        var get_todos = function () {
+
+            $('#todos').html("");
+
+            $.get("http://127.0.0.1:1308/get_todos", function (data) {
+                var data_json = JSON.parse(data);
+                var i;
+                for (i = 0; i < data_json.length; i++) {
+
+                    $('#todos').append("<div style='width:27.3%;margin-left:468px;border:1px solid black;text-align:center;color:black;font-size:25px;font-family: roboto ;'>" + data_json[i][1] + "<span style='font-size:15px;'><a class='del_btn  w3-black;' id='" + data_json[i][0] + "' style='width:33px;height:25px;color:black; position: absolute;left: 60.4%;'>    <i class='fas fa-trash-alt'></i></a></span>  <a class='update_btn ' id='" + data_json[i][0] + "' style='width:33px;height:25px;color:black; position: absolute;right: 60.4%;' ><i class='fas fa-edit'></i> </a></div>");
+
+                }
+
+            });
+
+        };
+
+        get_todos();
+
+        $('#todos').on('click', '.del_btn', function (event) {
+            var id = $(this).attr('id');
+            delete_selected_todo(id);
+        });
+
+        $('#todos').on('click', '.update_btn', function (event) {
+
+            var id = $(this).attr('id');
+
+            update_selected_todo(id);
+        });
+
+        $('#add_todo').click(function (event) {
+            //alert("hello")
+            $('#todo_text_field').val();
+            var input = $('#todo_text_field').val();
+            //alert(input);
+            add_todo(input);
+
+
+            //$( '#todo_text_field').keypress();
+        });
+        document.addEventListener("keypress", function (event) {
+            if (event.which === 13) {
+                var input = $('#todo_text_field').val()
+                //alert(input);
+                add_todo(input);
+            }
+
+        });
+        //$( '#add_todo' ).click(function() {
+        // $( '#todo_text_field').keypress();
+        //});
+
+        var add_todo = function (id) {
+
+
+            //var user_todo = prompt("Please enter a todo");
+            $.get("http://127.0.0.1:1308/db_insert/" + id, function (data) {
+
+                get_todos();
+                //alert("SUCCESS");
+
+            });
+
+        };
+
+        var delete_selected_todo = function (id) {
+            //var user_todo = prompt("Please select a rowid to delete a todo ");
+            $.get("http://127.0.0.1:1308/deletetodos/" + id, function (data) {
+
+                get_todos();
+                //alert("todo deleted");
+
+            });
+
+        };
+
+
+        var update_selected_todo = function (id) {
+            var user_todo = prompt("update a new value in todo");
+            $.get("http://127.0.0.1:1308/updatetodos/" + user_todo + '/' + id, function (data) {
+
+                get_todos();
+                //alert("todo deleted");
+
+            })
+
+        };
+        //$('#update_todos').click(function(){
+
+        //var user_todo = prompt("Enter new value:");
+        //var user_todo1 = prompt("Select a rowID to update the element:");
+        //$.get("http://127.0.0.1:1308/updatetodos/"+user_todo +'/'+ user_todo1,function(data){
+        //get_todos();
+        //});
+        //});
+        $('#reload').click(function () {
+            location.reload();
+        });
+    });
+
+
+
+
+</script>
+
+<head>
+    <style>
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <style>
+        .button {
+            border-radius: 50%;
+        }
+    </style>
+
+    <script src="https://kit.fontawesome.com/2ef1cbc3be.js" crossorigin="anonymous"></script>
+
+</head>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<body style="padding:40px">
+
+    <div id="header" style=" color:black ;text-align:center ;font-size: 35px;font-family:fantasy">
+        My TO DO's
+    </div>
+    <br>
+    <label for="add_todos"></label>
+    <a id="add_todo" class="" style="width:3.3%;height:30px;position: absolute;top:18%;right: 37.2%;" ;><i
+            class="fas fa-plus"></i></a>
+    <div class="center"><input type="text" id="todo_text_field" name="add_todo" margin="50px"
+            style="width:27.3%;height:33px;border-radius:'';">
+        <a id="reload" onclick="locationreload() " margin="50px" class=" w3-&#128260; "
+            style="width:2.4%;height:30px;padding-bottom:5px;position: absolute;top:18%;right:36.4%"><i
+                class="fas fa-sync-alt"></i></a></div>
+    <br>
+
+    <div id="todos">
+
+    </div>
+
+    <style>
+        body {
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRyz-7oM3giV1EAxBasV-FKSQQFoIWLYWBnmp33OT2cXn9pnNJ1&usqp=CAU');
+            background-size: 1368px 670px;
+        }
+    </style>
+
+
+
+
+
+
+</body>
+
+</html>
